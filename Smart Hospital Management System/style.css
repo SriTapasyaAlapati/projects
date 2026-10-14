@@ -1,0 +1,266 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Image only for home page */
+
+.home-page{
+
+background-image:url("hospital.jpeg");
+background-size:cover;
+background-position:center;
+height:100vh;
+
+display:flex;
+align-items:center;
+
+}
+body{
+background-image:url("hospital.jpeg");
+background-size:cover;
+background-position:center;
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* Left menu */
+
+.left-panel{
+
+margin-left:80px;
+
+background:rgba(255,255,255,0.85);
+padding:40px;
+border-radius:10px;
+
+}
+
+/* Heading */
+
+h1{
+
+font-size:48px;
+margin-bottom:35px;
+color:#1e3a5f;
+
+}
+
+/* Buttons */
+
+button{
+
+display:block;
+width:220px;
+
+padding:14px;
+margin:15px 0;
+
+font-size:16px;
+font-weight:bold;
+
+border:none;
+border-radius:6px;
+
+background:#2a7de1;
+color:white;
+
+cursor:pointer;
+
+transition:0.3s;
+
+}
+
+button:hover{
+
+background:#1f5fbf;
+transform:scale(1.05);
+}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+#intro{
+height:100vh;
+background:black;
+overflow:hidden;
+color:#ddd;
+position:relative;
+}
+
+/* dark edge vignette */
+
+.vignette{
+
+position:absolute;
+width:100%;
+height:100%;
+
+background:radial-gradient(circle,
+transparent 50%,
+rgba(0,0,0,0.9) 100%);
+
+pointer-events:none;
+
+}
+
+/* creepy title */
+
+.title{
+
+position:absolute;
+top:80px;
+left:50%;
+transform:translateX(-50%);
+
+font-size:70px;
+
+color:#ff2a2a;
+
+text-shadow:
+0 0 10px red,
+0 0 30px darkred,
+0 0 60px black;
+
+animation:flicker 2s infinite;
+
+}
+
+/* subtitle */
+
+.subtitle{
+
+position:absolute;
+top:160px;
+left:50%;
+transform:translateX(-50%);
+
+font-size:22px;
+color:#aaa;
+
+}
+
+/* flicker effect */
+
+@keyframes flicker{
+
+0%,18%,22%,25%,53%,57%,100%{
+opacity:1;
+}
+
+20%,24%,55%{
+opacity:0.4;
+}
+
+}
+
+/* ghost cards */
+
+.cards{
+
+position:absolute;
+top:55%;
+left:50%;
+transform:translate(-50%,-50%);
+display:flex;
+gap:60px;
+
+}
+
+.card{
+
+width:200px;
+height:140px;
+
+background:rgba(0,0,0,0.7);
+
+border:1px solid #222;
+
+border-radius:12px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+text-align:center;
+
+font-size:18px;
+
+box-shadow:0 0 25px rgba(255,0,0,0.2);
+
+}
+
+/* skeleton */
+
+.skeleton{
+
+position:absolute;
+bottom:0;
+left:-200px;
+
+width:180px;
+
+opacity:0.9;
+
+animation:
+walk 12s linear infinite,
+float 3s ease-in-out infinite;
+
+}
+
+/* skeleton walk */
+
+@keyframes walk{
+
+0%{
+left:-200px;
+}
+
+100%{
+left:110%;
+}
+
+}
+
+/* skeleton floating */
+
+@keyframes float{
+
+0%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-25px);
+}
+
+100%{
+transform:translateY(0);
+}
+
+}
+.error-msg {
+    color: #b30000;
+    background: #ffe6e6;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success-msg {
+    color: green;
+    background: #e6ffe6;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+}

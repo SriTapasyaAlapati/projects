@@ -1,0 +1,11 @@
+# keep the image small and free of local-only files
+__pycache__/
+*.pyc
+logs/
+.git
+.venv/
+venv/
+.pytest_cache/
+tests/
+requirements-dev.txt
+pytest.ini

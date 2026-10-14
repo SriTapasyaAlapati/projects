@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiniNykaa — Beauty, simplified</title>
+<link rel="icon" href="/img/nykaa-logo.png">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="utility-bar">
+  <a href="#" data-panel="app">📱 Get App</a>
+  <a href="#" data-panel="stores">📍 Store &amp; Events</a>
+  <a href="#" data-panel="gift">🎁 Gift Card</a>
+  <a href="#" data-panel="help">❓ Help</a>
+  <span id="live-dot" class="live-dot" title="WebSocket live updates">● offline</span>
+</div>
+
+<header class="main-header">
+  <a href="/" class="logo"><img src="/img/nykaa-logo.png" alt="Nykaa" width="112" height="52"></a>
+  <nav class="main-nav">
+    <a href="#" data-view="catalog" class="nav-cat" data-cat="">Categories</a>
+    <a href="#" data-view="catalog" class="nav-cat" data-cat="Makeup">Makeup</a>
+    <a href="#" data-view="catalog" class="nav-cat" data-cat="Skincare">Skincare</a>
+    <a href="#" data-view="catalog" class="nav-cat" data-cat="Haircare">Haircare</a>
+    <a href="#" data-view="catalog" class="nav-cat" data-cat="Fragrance">Fragrance</a>
+  </nav>
+  <div class="search-wrap">
+    <input id="search-box" type="text" placeholder="Search on MiniNykaa">
+    <button id="search-btn">🔍</button>
+  </div>
+  <div class="header-actions">
+    <button id="signin-btn" class="pill-btn">Sign in</button>
+    <span id="user-chip" class="user-chip hidden"></span>
+    <a href="#" data-view="orders" class="icon-link" title="My Orders">📦</a>
+    <a href="#" data-view="cart" class="icon-link cart-link" title="Cart">
+      🛍️<span id="cart-badge" class="badge hidden">0</span>
+    </a>
+    <a href="#" data-view="system" class="icon-link" title="System health">🖥️</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-text">
+    <h1>Beauty, delivered by a distributed system</h1>
+    <p>Mini project: load-balanced gateways · LRU-cached catalog · sharded products · Bully-elected order leader</p>
+  </div>
+</div>
+
+<main id="toast" class="toast hidden"></main>
+
+<!-- ============================= CATALOG ============================= -->
+<section id="view-catalog" class="view">
+  <div class="shard-note" id="shard-note"></div>
+  <div id="product-grid" class="product-grid"></div>
+</section>
+
+<!-- ============================== CART ================================ -->
+<section id="view-cart" class="view hidden">
+  <h2>Your Cart</h2>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-summary">
+    <div class="cart-total">Total: <span id="cart-total">Rs. 0</span></div>
+    <button id="checkout-btn" class="pink-btn">Checkout</button>
+  </div>
+</section>
+
+<!-- ============================= ORDERS =============================== -->
+<section id="view-orders" class="view hidden">
+  <h2>Order History</h2>
+  <div id="orders-list" class="orders-list"></div>
+</section>
+
+<!-- ============================= SYSTEM ================================ -->
+<section id="view-system" class="view hidden">
+  <h2>System Health <span class="muted">(live cluster view, refreshes every 2s)</span></h2>
+  <div id="node-grid"></div>
+  <div id="system-log" class="system-log"></div>
+</section>
+
+<footer>
+  MiniNykaa — a distributed-systems mini project modelled on Nykaa. All data is in-memory and resets when the backend restarts.
+</footer>
+
+<div id="panel-modal" class="modal hidden">
+  <div class="modal-box wide">
+    <button id="panel-close" class="panel-close">✕</button>
+    <div id="panel-body"></div>
+  </div>
+</div>
+
+<div id="signin-modal" class="modal hidden">
+  <div class="modal-box">
+    <h3>Sign in</h3>
+    <p class="muted">No password needed — this is a teaching prototype. Pick any name.</p>
+    <input id="signin-name" type="text" placeholder="e.g. priya">
+    <div class="modal-actions">
+      <button id="signin-cancel" class="ghost-btn">Cancel</button>
+      <button id="signin-ok" class="pink-btn">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

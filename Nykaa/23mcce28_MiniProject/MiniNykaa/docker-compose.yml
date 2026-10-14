@@ -1,0 +1,101 @@
+# MiniNykaa - the whole distributed system as ten containers on one Docker
+# network. Every container is the SAME image (see Dockerfile); only the command
+# differs. Hostnames below are resolved by Docker's embedded DNS, which is why
+# common/config.py reads them from environment variables.
+#
+#   web  ->  lb  ->  gateway-1 | gateway-2  ->  catalog-1..3   (sharded)
+#                                            ->  order-1..3     (Bully leader)
+#
+# Usage:
+#   docker compose up --build            start everything
+#   docker compose up --build -d         ...in the background
+#   docker compose down                  stop and remove
+#   docker compose ps                    list the ten containers
+#   docker compose logs -f order-3       follow one service
+#   docker compose stop order-3          kill the current order LEADER -> Bully election
+#   docker compose start order-3         bring it back -> it bullies its way back to leader
+#   docker compose stop gateway-1        kill a gateway -> the load balancer routes around it
+#   LB_ALGO=least_connections docker compose up --build    use the other LB algorithm
+#
+# Then open http://localhost:8080
+
+x-backend-env: &backend-env
+  BIND_HOST: "0.0.0.0"
+  CATALOG_1_HOST: "catalog-1"
+  CATALOG_2_HOST: "catalog-2"
+  CATALOG_3_HOST: "catalog-3"
+  ORDER_1_HOST: "order-1"
+  ORDER_2_HOST: "order-2"
+  ORDER_3_HOST: "order-3"
+  GATEWAY_1_HOST: "gateway-1"
+  GATEWAY_2_HOST: "gateway-2"
+
+services:
+
+  catalog-1:
+    build: .
+    command: ["python", "catalog_service/catalog_server.py", "catalog-1"]
+    environment: *backend-env
+    ports: ["6001:6001"]   # published only so tests/tools on the host can reach it
+
+  catalog-2:
+    build: .
+    command: ["python", "catalog_service/catalog_server.py", "catalog-2"]
+    environment: *backend-env
+    ports: ["6002:6002"]   # published only so tests/tools on the host can reach it
+
+  catalog-3:
+    build: .
+    command: ["python", "catalog_service/catalog_server.py", "catalog-3"]
+    environment: *backend-env
+    ports: ["6003:6003"]   # published only so tests/tools on the host can reach it
+
+  order-1:
+    build: .
+    command: ["python", "order_service/order_server.py", "order-1"]
+    environment: *backend-env
+    ports: ["7001:7001"]   # published only so tests/tools on the host can reach it
+
+  order-2:
+    build: .
+    command: ["python", "order_service/order_server.py", "order-2"]
+    environment: *backend-env
+    ports: ["7002:7002"]   # published only so tests/tools on the host can reach it
+
+  order-3:
+    build: .
+    command: ["python", "order_service/order_server.py", "order-3"]
+    environment: *backend-env
+    ports: ["7003:7003"]   # published only so tests/tools on the host can reach it
+
+  gateway-1:
+    build: .
+    command: ["python", "gateway/gateway_server.py", "gateway-1"]
+    environment: *backend-env
+    depends_on: [catalog-1, catalog-2, catalog-3, order-1, order-2, order-3]
+    ports: ["5101:5101"]   # published only so tests/tools on the host can reach it
+
+  gateway-2:
+    build: .
+    command: ["python", "gateway/gateway_server.py", "gateway-2"]
+    environment: *backend-env
+    depends_on: [catalog-1, catalog-2, catalog-3, order-1, order-2, order-3]
+    ports: ["5102:5102"]   # published only so tests/tools on the host can reach it
+
+  lb:
+    build: .
+    command: ["python", "gateway/load_balancer.py"]
+    environment:
+      <<: *backend-env
+      LB_ALGO: "${LB_ALGO:-round_robin}"
+    depends_on: [gateway-1, gateway-2]
+    ports: ["5000:5000"]   # the front door; published so the CLI client on the host can use it too
+
+  web:
+    build: .
+    command: ["python", "web/web_server.py"]
+    environment:
+      BIND_HOST: "0.0.0.0"
+      GATEWAY_HOST: "lb"
+    depends_on: [lb]
+    ports: ["8080:8080", "8081:8081"]   # 8080 = website (HTTP), 8081 = WebSocket live channel
